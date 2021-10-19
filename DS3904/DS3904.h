@@ -28,17 +28,18 @@ class DS3904
   public:
     DS3904(int deviceAddress);
     DS3904(int deviceAddress, int model);
+    DS3904(int deviceAddress, int model, int minValue, int maxValue);
     void setValue(byte resistorAddress, byte value);
     byte getValue(byte resistorAddress);
-    void setOhmValue(byte resistorAddress, long ohms);
-    long getOhmValue(byte resistorAddress);
-    long toOhms(byte value);
-    byte fromOhms(long ohms);
+    void setOhmValue(byte resistorAddress, double ohms);
+    double getOhmValue(byte resistorAddress);
+    double toOhms(byte value);
+    byte fromOhms(double ohms);
   private:
     void init();
     int _deviceAddress;
     int _model;  
-    int _ohmPerStep;  
+    float _ohmPerStep;  
 };
 
 #endif
