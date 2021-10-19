@@ -20,7 +20,7 @@ http://datasheets.maximintegrated.com/en/ds/DS3904-DS3905.pdf*/
 #define DS3905_020 2
 #define BASE_ADDRESS 0x50
 #define WRITE_DELAY 20
-#define STEPS 0x80
+#define STEPS 0x7F
 #define HIGH_Z_OHM 5500000
 
 class DS3904
@@ -28,17 +28,19 @@ class DS3904
   public:
     DS3904(int deviceAddress);
     DS3904(int deviceAddress, int model);
+    DS3904(int deviceAddress, int model, int minValue, int maxValue);
     void setValue(byte resistorAddress, byte value);
     byte getValue(byte resistorAddress);
-    void setOhmValue(byte resistorAddress, long ohms);
-    long getOhmValue(byte resistorAddress);
-    long toOhms(byte value);
-    byte fromOhms(long ohms);
+    void setOhmValue(byte resistorAddress, double ohms);
+    double getOhmValue(byte resistorAddress);
+    double toOhms(byte value);
+    byte fromOhms(double ohms);
+    float getStep()
   private:
     void init();
     int _deviceAddress;
     int _model;  
-    int _ohmPerStep;  
+    float _ohmPerStep;  
 };
 
 #endif

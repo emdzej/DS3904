@@ -19,9 +19,18 @@ DS3904::DS3904(int deviceAddress, int model)
   init();
 }
 
+DS3904::DS3904(int deviceAddress, int model, int minValue, int maxValue)
+{
+  _deviceAddress = deviceAddress;
+  _model = model;
+  MIN_VALUES[model] = minValue;
+  MAX_VALUES[model] = maxValue;
+  init();
+}
+
 void DS3904::init() 
 {
-  _ohmPerStep = (MAX_VALUES[_model] - MIN_VALUES[_model]) / STEPS;
+  _ohmPerStep = (MAX_VALUES[_model] - MIN_VALUES[_model]) / float(STEPS);
 }
 
 void DS3904::setValue(byte resistorAddress, byte value)
@@ -46,23 +55,23 @@ byte DS3904::getValue(byte resistorAddress)
   return result;
 }
 
-void DS3904::setOhmValue(byte resistorAddress, long ohms)
+void DS3904::setOhmValue(byte resistorAddress, double ohms)
 {
   byte value = fromOhms(ohms);  
   setValue(resistorAddress, value);
 }
 
-byte DS3904::fromOhms(long ohms) 
+byte DS3904::fromOhms(double ohms) 
 {
   return ohms / _ohmPerStep;
 }
 
-long DS3904::toOhms(byte value) {
+double DS3904::toOhms(byte value) {
   if ((value & HIGH_Z) == HIGH_Z) return HIGH_Z_OHM;
-  return value * _ohmPerStep;
+  return (value * _ohmPerStep) + MIN_VALUES[_model];
 }
 
-long DS3904::getOhmValue(byte resistorAddress)
+double DS3904::getOhmValue(byte resistorAddress)
 {
   byte value = getValue(resistorAddress);
   return toOhms(value);
